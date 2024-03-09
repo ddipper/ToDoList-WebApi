@@ -9,4 +9,9 @@ app.UseHttpsRedirection();
 
 //app.MapFallbackToFile("/index.html");
 
+app.Map("/dev", async (context) =>
+{
+    await context.Response.WriteAsync("you select /dev");
+});
+
 app.Run();

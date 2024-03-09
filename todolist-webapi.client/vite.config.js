@@ -46,7 +46,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherforecast': {
+            '^/devdipp': {
                 target: 'https://localhost:7259/',
                 secure: false
             }
