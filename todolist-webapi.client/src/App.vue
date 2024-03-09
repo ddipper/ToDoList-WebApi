@@ -1,47 +1,50 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <h3>ToDoList</h3>
+    <div class="header-links">
+      <a>Link</a>
+      <a>Link</a>
+      <a>Link</a>
     </div>
   </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="content">
+    
+  </div>
 </template>
 
+<script>
+
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
+  * {
+    font-family: Gilroy, sans-serif;
+  }
+  
+  header{
+    position: fixed;
+    top: 0;
+    width: 100%;
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
 
-  .logo {
-    margin: 0 2rem 0 0;
   }
-
-  header .wrapper {
+  
+  header h3{
+    color: white;
+  }
+  
+  .header-links{
     display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+    justify-content: space-around;
   }
-}
+  
+  .header-links a{
+    color: white;
+    padding: 10px 15px;
+  }
+  
 </style>
