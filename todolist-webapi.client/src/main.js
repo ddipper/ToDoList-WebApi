@@ -1,9 +1,13 @@
 import { createApp } from 'vue'
-
+import { createPinia } from 'pinia'
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
+//import * as components from 'vuetify/components'
+import { VBtn } from 'vuetify/components/VBtn'
+import { VIcon } from 'vuetify/components/VIcon'
+import { VForm } from 'vuetify/components/VForm'
+import {  VTextField } from 'vuetify/components/VTextField'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
@@ -13,7 +17,13 @@ import App from './App.vue'
 import './assets/main.css'
 
 const vuetify = createVuetify({
-    components,
+    components:{
+        //...components,
+        VBtn,
+        VIcon,
+        VForm,
+        VTextField,
+    },
     directives,
     icons: {
         defaultSet: 'mdi',
@@ -31,5 +41,6 @@ const app = createApp(App)
 
 app.use(router)
 app.use(vuetify)
+app.use(createPinia)
 
 app.mount('#app')

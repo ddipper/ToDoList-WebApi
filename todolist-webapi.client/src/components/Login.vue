@@ -1,32 +1,43 @@
 ﻿<template>
   <router-view/>
-    <h2>Login</h2>
-    <form @submit.prevent="submitForm">
-      <label>Username:</label>
-      <input type="text" v-model="username" />
-
-      <label>Password:</label>
-      <input type="password" v-model="password" />
-
-      <button type="submit" @click="submitForm()">Login</button>
-    </form>
-  
+  <div class="content">
+    <v-icon :icon="'mdi-account'" size="50px" color="#9e9eff" class="icon"></v-icon>
+    <h1>Login to ToDo List</h1>
+    <v-form @submit.prevent class="form" v-model="valid">
+      <v-text-field
+          v-model="username"
+          label="Username"
+          :rules="rules"
+          required
+      ></v-text-field>
+      <v-text-field
+          v-model="password"
+          label="Password"
+          type="password"
+          :rules="rules"
+          required
+      ></v-text-field>
+      <v-btn class="mt-2" type="submit" block>Login</v-btn>
+    </v-form>
+  </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      username: '',
-      password: ''
-    }
-  },
-  methods: {
-    submitForm() {
-      console.log('Username:', this.username);
-      console.log('Password:', this.password);
-    }
-  }
+  data: () => ({
+    valid: false,
+    username: '',
+    password: '',
+    email: '',
+    rules: [
+      value => {
+        if (value) return true
+
+        return 'This is a required field.'
+      },
+    ],
+  }),
+  
 }
 </script>
 
@@ -35,5 +46,26 @@ body {
   width: 300px;
   margin: 0 auto;
   background: olive;
+}
+
+.content{
+  height: 100vh;
+  background: #232323;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.content h1{
+  margin-bottom: 40px;
+}
+
+.form{
+  width: 350px;
+}
+
+.icon{
+  margin-bottom: 10px;
 }
 </style>
