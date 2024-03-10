@@ -1,17 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+builder.Services.AddCors();
 
-//app.UseDefaultFiles();
-//app.UseStaticFiles();
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-//app.MapFallbackToFile("/index.html");
+app.UseRouting();
 
-app.Map("/dev", async (context) =>
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+app.MapGet("/login", async context =>
 {
-    await context.Response.WriteAsync("you select /dev");
+    Console.WriteLine("/login");
 });
 
 app.Run();

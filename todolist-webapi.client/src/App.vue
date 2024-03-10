@@ -1,20 +1,30 @@
 <template>
+  <router-view />
   <header>
     <h3>ToDoList</h3>
     <div class="header-links">
-      <a>Link</a>
+      <a @click="getLogin()">Link</a>
       <a>Link</a>
       <a>Link</a>
     </div>
   </header>
   <div class="content">
-    
+
   </div>
 </template>
 
 <script>
-
+export default {
+  methods: {
+    getLogin() {
+      this.$router.push('/login');
+    }
+  }
+}
 </script>
+
+<!-- оставшийся код -->
+
 
 <style scoped>
   * {
