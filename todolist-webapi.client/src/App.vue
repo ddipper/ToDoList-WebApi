@@ -1,10 +1,10 @@
 <template>
-  <router-view />
+  <router-view/>
   <header>
     <h3>ToDoList</h3>
     <div class="header-links">
-      <a @click="getLogin()">Link</a>
-      <a>Link</a>
+      <a @click="getLogin()" href="/login">Login</a>
+      <a ></a>
       <a>Link</a>
     </div>
   </header>
@@ -22,9 +22,6 @@ export default {
   }
 }
 </script>
-
-<!-- оставшийся код -->
-
 
 <style scoped>
   * {
