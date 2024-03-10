@@ -25,12 +25,12 @@ export default {
   }
   
   header{
+    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #4158D0;
     background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
 
   }
@@ -54,6 +54,10 @@ export default {
     font-size: 20px;
     text-decoration: none;
     font-weight: bold;
+  }
+  
+  a{
+    color: red;
   }
   
 </style>
