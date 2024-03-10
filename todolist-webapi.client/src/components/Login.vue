@@ -1,17 +1,16 @@
 ﻿<template>
-  <header></header>
-  <div class="login">
+  <router-view/>
     <h2>Login</h2>
     <form @submit.prevent="submitForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" v-model="username" />
+      <label>Username:</label>
+      <input type="text" v-model="username" />
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="password" />
+      <label>Password:</label>
+      <input type="password" v-model="password" />
 
-      <button type="submit">Login</button>
+      <button type="submit" @click="submitForm()">Login</button>
     </form>
-  </div>
+  
 </template>
 
 <script>
@@ -32,8 +31,9 @@ export default {
 </script>
 
 <style scoped>
-.login {
+body {
   width: 300px;
   margin: 0 auto;
+  background: olive;
 }
 </style>

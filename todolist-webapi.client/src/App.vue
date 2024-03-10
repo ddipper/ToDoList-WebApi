@@ -1,35 +1,30 @@
-<template>
-  <router-view/>
-  <header>
-    <h3>ToDoList</h3>
-    <div class="header-links">
-      <a @click="getLogin()" href="/login">Login</a>
-      <a ></a>
-      <a>Link</a>
-    </div>
-  </header>
-  <div class="content">
-
-  </div>
-</template>
-
 <script>
 export default {
   methods: {
-    getLogin() {
-      this.$router.push('/login');
-    }
   }
 }
 </script>
 
+<template>
+  <header>
+    <router-link class="header-name" :to="{ name: 'Home' }">ToDoList</router-link>
+    <div class="header-links">
+      <router-link :to="{ name: 'Notes' }">Notes</router-link>
+      <router-link :to="{ name: 'Login' }">Login</router-link>
+      <router-link :to="{ name: 'Register' }">Register</router-link>
+    </div>
+  </header>
+  <router-view/>
+</template>
+
 <style scoped>
   * {
-    font-family: Gilroy, sans-serif;
+      font-family: Gilroy, sans-serif;
+      margin: 0;
+      padding: 0;
   }
   
   header{
-    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
@@ -52,6 +47,13 @@ export default {
   .header-links a{
     color: white;
     padding: 10px 15px;
+  }
+  
+  .header-name{
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
   }
   
 </style>
