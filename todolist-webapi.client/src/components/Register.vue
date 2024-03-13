@@ -3,7 +3,7 @@
   <div class="content">
     <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon" v-if="!user"></v-icon>
     <h1 v-if="!user">Register to ToDo List</h1>
-    <v-form @submit.prevent class="form" v-model="valid" v-if="!user">
+    <v-form @submit.prevent class="form" v-if="!user" @submit="register()">
       <v-text-field
           v-model="username"
           label="Username"
@@ -23,18 +23,21 @@
           :rules="rules"
           required
       ></v-text-field>
-      <v-btn class="mt-2" type="submit" block @click="register()">Register</v-btn>
+      <v-btn class="mt-2" type="submit" block >Register</v-btn>
     </v-form>
     <div v-else class="form">
-      <h1>You are already registered.</h1>
+      <h1>You are registered. Username: {{ username }}</h1>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
+      API_URL: 'http://localhost:5106',
+      
       username: '',
       password: '',
       password2: '',
@@ -45,13 +48,22 @@ export default {
           return 'This is a required field.'
         },
       ],
-      API_URL: 'http://localhost:5106/register',
-      user: 1,
-      valid: false,
+      user: null,
     }
   },
   methods: {
-    async register(){}
+    async register() {
+      await axios.post(
+          `${this.API_URL}/register`, { username: this.username, password: this.password },
+          { headers: { 'Content-Type': 'application/json' } }
+      ).then(({ data }) => {
+        if(data.error !== ''){
+          alert('This username already taken.');
+          return;
+        }
+        this.user = data.username;
+      })
+    }
   }
 
 }
