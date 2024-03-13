@@ -13,9 +13,9 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-app.MapGet("/login", async context =>
+app.MapGet("123", async context =>
 {
-    Console.WriteLine("/login");
+    Console.WriteLine("321");
 });
 
 app.Run();
