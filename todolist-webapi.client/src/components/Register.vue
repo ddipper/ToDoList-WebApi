@@ -1,9 +1,9 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon"></v-icon>
-    <h1>Register to ToDo List</h1>
-    <v-form @submit.prevent class="form" v-model="valid">
+    <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon" v-if="!user"></v-icon>
+    <h1 v-if="!user">Register to ToDo List</h1>
+    <v-form @submit.prevent class="form" v-model="valid" v-if="!user">
       <v-text-field
           v-model="username"
           label="Username"
@@ -23,38 +23,41 @@
           :rules="rules"
           required
       ></v-text-field>
-      <v-btn class="mt-2" type="submit" block>Register</v-btn>
+      <v-btn class="mt-2" type="submit" block @click="register()">Register</v-btn>
     </v-form>
+    <div v-else class="form">
+      <h1>You are already registered.</h1>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    valid: false,
-    username: '',
-    password: '',
-    password2: '',
-    email: '',
-    rules: [
-      value => {
-        if (value) return true
+  data() {
+    return {
+      username: '',
+      password: '',
+      password2: '',
+      rules: [
+        value => {
+          if (value) return true
 
-        return 'This is a required field.'
-      },
-    ],
-  }),
+          return 'This is a required field.'
+        },
+      ],
+      API_URL: 'http://localhost:5106/register',
+      user: 1,
+      valid: false,
+    }
+  },
+  methods: {
+    async register(){}
+  }
 
 }
 </script>
 
 <style scoped>
-body {
-  width: 300px;
-  margin: 0 auto;
-  background: olive;
-}
-
 .content{
   height: 100vh;
   background: #232323;
@@ -75,4 +78,9 @@ body {
 .icon{
   margin-bottom: 10px;
 }
+
+.form h1{
+  text-align: center;
+}
+
 </style>
