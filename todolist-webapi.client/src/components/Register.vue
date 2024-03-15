@@ -57,11 +57,14 @@ export default {
           `${this.API_URL}/register`, { username: this.username, password: this.password },
           { headers: { 'Content-Type': 'application/json' } }
       ).then(({ data }) => {
-        if(data.error !== ''){
-          alert('This username already taken.');
-          return;
+        if(data.error == '0') {
+          this.user = data.username;
         }
-        this.user = data.username;
+        else {
+          alert('This username already taken.');
+        }
+
+        
       })
     }
   }
