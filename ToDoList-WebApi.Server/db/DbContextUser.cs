@@ -7,7 +7,7 @@ namespace SQLite
         public DbSet<SQLite.User> Users {get;set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=users.db");
+            optionsBuilder.UseSqlite("Data Source=./db/users.sqlite");
         }
         public User FindUserByName(string name)
         {

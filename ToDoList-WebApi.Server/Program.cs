@@ -51,7 +51,8 @@ app.MapPost("/login", async context => {
         await context.Response.WriteAsJsonAsync(new { error = "unregister"}); 
         return;
     }
-
+    
+    Console.WriteLine($"/login | Username: {userCredentials.Username} Pass: {userCredentials.Password}");
     await context.Response.WriteAsJsonAsync(new { username = userCredentials!.Username, error = null as string});
 });
 
