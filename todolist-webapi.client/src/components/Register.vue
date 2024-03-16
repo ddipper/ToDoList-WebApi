@@ -3,7 +3,7 @@
   <div class="content">
     <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon" v-if="!valid"></v-icon>
     <h1 v-if="!valid">Register to ToDo List {{ userStore.username }} </h1>
-    <v-form @submit.prevent class="form" v-if="!valid" @submit="register()">
+    <v-form @submit.prevent class="form" v-if="!valid || userStore.username == null" @submit="register()">
       <v-text-field
           v-model="username"
           label="Username"
@@ -57,7 +57,7 @@ export default {
           if(this.username != null) { this.btnSubmit = true  }
         } 
       ],
-      valid: null,
+      valid: false,
       loading: false,
       btnSubmit: false,
     }
@@ -74,11 +74,11 @@ export default {
           `${this.API_URL}/register`, { username: this.username, password: this.password },
           { headers: { 'Content-Type': 'application/json' } }
       ).then(({ data }) => {
-        if(data.error == '0') {
+        if(data.error == null) {
           this.valid = data.username;
           this.userStore.setUsername(data.username);
         }
-        else {
+        else if(data.error == 'taken') {
           alert('This username already taken.');
           this.unLoad()
         }

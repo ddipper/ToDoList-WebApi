@@ -1,9 +1,9 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-icon :icon="'mdi-account'" size="50px" color="#9e9eff" class="icon"></v-icon>
-    <h1>Login to ToDo List</h1>
-    <v-form @submit.prevent class="form" v-model="valid">
+    <v-icon v-if="!valid" :icon="'mdi-account'" size="50px" color="#9e9eff" class="icon"></v-icon>
+    <h1 v-if="!valid">Login to ToDo List</h1>
+    <v-form v-if="!valid" @submit.prevent class="form" @submit="login()">
       <v-text-field
           v-model="username"
           label="Username"
@@ -17,27 +17,65 @@
           :rules="rules"
           required
       ></v-text-field>
-      <v-btn class="mt-2" type="submit" block>Login</v-btn>
+      <v-btn class="mt-2" type="submit" block :loading="loading" :active="btnSubmit">Login</v-btn>
     </v-form>
+    <div v-else class="form2">
+      <h1>You have been successfully logged.<br>Username: {{ username }}</h1>
+      <router-link :to="{ name: 'Notes' }">Go to notes</router-link>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { useUserStore } from "@/stores/UserStore.js";
+
 export default {
   data: () => ({
+    userStore: useUserStore(),
     valid: false,
+    API_URL: 'http://localhost:5106',
     username: '',
     password: '',
-    email: '',
     rules: [
       value => {
-        if (value) return true
-
+        if (value) { return true }
         return 'This is a required field.'
+        if (this.password != null && this.username != null) { this.btnSubmit = true }
       },
     ],
+    loading: false,
+    btnSubmit: false,
   }),
-  
+  methods: {
+    async login() {
+      if(this.username == null || this.password == null)
+      {
+        alert('Check the correctness of the entered data.')
+        return
+      }
+      this.load()
+      await axios.post(
+          `${this.API_URL}/login`, { username: this.username, password: this.password },
+          { headers: { 'Content-Type': 'application/json' } }
+      ).then(({ data }) => {
+        if(data.error == null) {
+          this.valid = data.username;
+          this.userStore.setUsername(data.username);
+        }
+        else if (data.error == 'unregister'){
+          alert('Check the correctness of the entered data');
+          this.unLoad()
+        }
+      })
+    },
+    load () {
+      this.loading = true
+    },
+    unLoad() {
+      this.loading = false
+    }
+  }
 }
 </script>
 
@@ -63,6 +101,25 @@ body {
 
 .form{
   width: 350px;
+}
+
+.form2{
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  a{
+    text-align: center;
+    width: 100%;
+    color: white;
+    font-size: 20px;
+  }
 }
 
 .icon{

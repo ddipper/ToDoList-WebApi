@@ -1,5 +1,14 @@
 ﻿<script>
-
+import { useUserStore } from "@/stores/UserStore.js";
+export default {
+  data() {
+    return {
+      userStore: useUserStore(),
+    }
+  },
+  methods: {
+  }
+}
 </script>
 
 <template>
@@ -11,8 +20,8 @@
       <h3>Click where <span>you want</span> to go</h3>
       <div class="links">
         <router-link :to="{ name: 'Notes' }"><v-btn rounded="lg" prepend-icon="mdi-note-multiple" variant="text" size="large">Notes</v-btn></router-link>
-        <router-link :to="{ name: 'Login' }"><v-btn rounded="lg" prepend-icon="mdi-account" variant="text" size="large">Login</v-btn></router-link>
-        <router-link :to="{ name: 'Register' }"><v-btn rounded="lg" prepend-icon="mdi-account-plus" variant="text" size="large">Register</v-btn></router-link>
+        <router-link :to="{ name: 'Login' }" v-if="userStore.username == null"><v-btn rounded="lg" prepend-icon="mdi-account" variant="text" size="large">Login</v-btn></router-link>
+        <router-link :to="{ name: 'Register' }" v-if="userStore.username == null"><v-btn rounded="lg" prepend-icon="mdi-account-plus" variant="text" size="large">Register</v-btn></router-link>
       </div>
     </div>
   </div>

@@ -16,8 +16,8 @@ export default {
     <router-link class="header-name" :to="{ name: 'Home' }">ToDoList</router-link>
     <div class="header-links">
       <router-link :to="{ name: 'Notes' }">Notes</router-link>
-      <router-link v-if="userStore.username==null" :to="{ name: 'Login' }">Login</router-link>
-      <router-link v-if="userStore.username==null" :to="{ name: 'Register' }">Register</router-link>
+      <router-link v-if="userStore.username == null" :to="{ name: 'Login' }">Login</router-link>
+      <router-link v-if="userStore.username == null" :to="{ name: 'Register' }">Register</router-link>
       <h2 v-if="userStore.username != null">{{ userStore.username }}</h2>
     </div>
   </header>

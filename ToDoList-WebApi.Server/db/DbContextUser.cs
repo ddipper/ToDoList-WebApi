@@ -13,5 +13,9 @@ namespace SQLite
         {
             return Users.FirstOrDefault(u => u.Name == name);
         }
+        public User FindUserByNameAndPassword(string name, string password)
+        {
+            return Users.FirstOrDefault(u => u.Name == name && u.Password == password);
+        }
     }
 }
