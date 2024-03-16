@@ -1,5 +1,11 @@
 <script>
+import { useUserStore } from "@/stores/UserStore.js";
 export default {
+  data() {
+    return {
+      userStore: useUserStore(),  
+    }
+  },
   methods: {
   }
 }
@@ -10,14 +16,15 @@ export default {
     <router-link class="header-name" :to="{ name: 'Home' }">ToDoList</router-link>
     <div class="header-links">
       <router-link :to="{ name: 'Notes' }">Notes</router-link>
-      <router-link :to="{ name: 'Login' }">Login</router-link>
-      <router-link :to="{ name: 'Register' }">Register</router-link>
+      <router-link v-if="userStore.username==null" :to="{ name: 'Login' }">Login</router-link>
+      <router-link v-if="userStore.username==null" :to="{ name: 'Register' }">Register</router-link>
+      <h2 v-if="userStore.username != null">{{ userStore.username }}</h2>
     </div>
   </header>
   <router-view/>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
   * {
       font-family: Gilroy, sans-serif;
       margin: 0;
@@ -36,20 +43,27 @@ export default {
     background-size: 300% 100%;
     animation: gradient 12s linear infinite;
     animation-direction: alternate;
-  }
-  
-  header h3{
-    color: white;
+
+    h3{
+      color: white;
+    }
+    
   }
   
   .header-links{
     display: flex;
     justify-content: space-around;
-  }
-  
-  .header-links a{
-    color: white;
-    padding: 10px 15px;
+
+    a{
+      color: white;
+      padding: 10px 15px;
+    }
+    
+    h2 {
+      color: white;
+      padding: 10px 15px;
+      font-size: 15px;
+    }
   }
   
   .header-name{

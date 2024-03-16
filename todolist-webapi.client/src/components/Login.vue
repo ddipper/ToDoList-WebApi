@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 body {
   width: 300px;
   margin: 0 auto;
@@ -55,10 +55,10 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
 
-.content h1{
-  margin-bottom: 40px;
+  h1{
+    margin-bottom: 40px;
+  }
 }
 
 .form{

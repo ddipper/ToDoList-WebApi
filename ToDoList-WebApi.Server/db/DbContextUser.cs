@@ -2,12 +2,16 @@
  
 namespace SQLite
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContextUser : DbContext
     {
         public DbSet<SQLite.User> Users {get;set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=users.db");
+        }
+        public User FindUserByName(string name)
+        {
+            return Users.FirstOrDefault(u => u.Name == name);
         }
     }
 }

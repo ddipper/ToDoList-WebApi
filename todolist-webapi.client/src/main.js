@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
+
 import { createPinia } from 'pinia'
+import { useUserStore } from "@/stores/UserStore.js";
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -38,7 +40,12 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App)
-app.use(createPinia)
+
+const pinia = createPinia()
+app.use(pinia)
+
+//const userStore = useUserStore()
+
 
 app.use(router)
 app.use(vuetify)

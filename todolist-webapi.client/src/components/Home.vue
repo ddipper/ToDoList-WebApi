@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
   .content {
     display: flex;
     padding-top: 50px;
@@ -37,21 +37,23 @@
     align-items: center;
     text-align: center;
     color: white;
+
+    h3{
+      font-weight: normal;
+      padding: 10px 0 30px;
+    }
+
+    h3 span{
+      color: #fecb70;
+      font-weight: bold;
+    }
   }
-  .glass h3{
-    font-weight: normal;
-    padding: 10px 0 30px;
-  }
+
   .links {
     padding: 7px 0;
     width: 75%;
     display: flex;
     justify-content: space-around;
-  }
-  
-  .glass h3 span{
-    color: #fecb70;
-    font-weight: bold;
   }
 
   .typewriter h1 {

@@ -13,7 +13,7 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-ApplicationContext db = new ApplicationContext();
+ApplicationContextUser db = new ApplicationContextUser();
 
 
 app.MapPost("/register", async context =>
@@ -21,11 +21,21 @@ app.MapPost("/register", async context =>
     var userCredentials = await context.Request.ReadFromJsonAsync<Models.UserCredentials>();
     
     db.Database.EnsureCreated();
-    User User = new User(userCredentials.Username, userCredentials.Password);
-    db.Users.Add(User);
+    User user = new User(userCredentials!.Username, userCredentials.Password);
+    User isCreated = db.FindUserByName(userCredentials.Username);
+
+    if (isCreated != null)
+    {
+        Console.WriteLine(isCreated.Password);
+        await context.Response.WriteAsJsonAsync(new { error = "taken"});
+        return;
+    }
+    
+    
+    db.Users.Add(user);
     db.SaveChanges();
     
-    Console.WriteLine($"/register !!! Username: {userCredentials?.Username}");
+    Console.WriteLine($"/register | Username: {userCredentials.Username} Pass: {userCredentials.Password}");
     
     context.Response.ContentType = "application/json";
     await context.Response.WriteAsJsonAsync(new { username = userCredentials?.Username, error = "0"});

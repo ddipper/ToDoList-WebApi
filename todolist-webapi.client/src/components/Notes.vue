@@ -19,7 +19,7 @@
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .content{
     min-height: 100vh;
     background: #232323;
@@ -40,27 +40,27 @@
     padding: 15px;
     display: flex;
     flex-direction: column;
-  }
 
-  .note h2 {
-    font-weight: normal;
-  }
-  
-  .note h3{
-    font-weight: normal;
-    padding-bottom: 20px;
-    padding-top: 5px;
+    h2 {
+      font-weight: normal;
+    }
+
+    h3{
+      font-weight: normal;
+      padding-bottom: 20px;
+      padding-top: 5px;
+    }
   }
   
   .note-buttons {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-  }
-  
-  .note-buttons button{
-    width: 30%;
-    height: 37px;
+
+    button{
+      width: 30%;
+      height: 37px;
+    }
   }
   
 </style>
