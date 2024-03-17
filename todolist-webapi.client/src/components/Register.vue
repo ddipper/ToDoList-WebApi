@@ -18,7 +18,7 @@
       ></v-text-field>
       <v-text-field
           v-model="password2"
-          label="Repeat password"
+          label="Confirm password"
           type="password"
           :rules="rulesPass"
           required

@@ -1,7 +1,7 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-btn prepend-icon="mdi-plus" variant="tonal" class="btn-create">
+    <v-btn prepend-icon="mdi-plus" variant="tonal" class="btn-create" @click="dialogNew = true">
       New note
     </v-btn>
     <div class="note">
@@ -12,11 +12,44 @@
         <v-btn size="small" prepend-icon="mdi-minus">Delete note</v-btn>
       </div>
     </div>
+    <div class="pa-4 text-center">
+      <v-dialog v-model="dialogNew" max-width="600">
+        <v-card prepend-icon="mdi-plus" title="New note">
+          <v-card-text>
+            <v-row dense>  
+              <v-col>
+                <v-text-field label="Title" required></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <v-textarea label="Description" required></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card-text>
+  
+          <v-divider></v-divider>
+  
+          <v-card-actions>
+            <v-spacer></v-spacer>
+  
+            <v-btn text="Close" variant="plain" @click="dialogNew = false"></v-btn>
+  
+            <v-btn color="primary" text="Save" variant="tonal" @click="dialogNew = false" ></v-btn>
+          
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
-
+  
 <script>
-
+  export default {
+    data: () => ({
+      dialogNew: false,
+    }),
+  }
 </script>
 
 <style lang="scss" scoped>

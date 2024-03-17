@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,6 @@ app.MapPost("/register", async context => {
     
     if (isCreated != null)
     {
-
         await context.Response.WriteAsJsonAsync(new { error = "taken" });
         return;
     }
@@ -54,6 +54,22 @@ app.MapPost("/login", async context => {
     
     Console.WriteLine($"/login | Username: {userCredentials.Username} Pass: {userCredentials.Password}");
     await context.Response.WriteAsJsonAsync(new { username = userCredentials!.Username, error = null as string});
+});
+
+app.MapGet("/notes", async context => {
+    
+});
+
+app.MapPost("/notes/add", async context => {
+
+});
+
+app.MapPost("/notes/delete", async context => {
+    
+});
+
+app.MapPost("/notes/edit", async context => {
+    
 });
 
 app.Run();
