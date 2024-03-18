@@ -14,16 +14,16 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-ApplicationContextUser db = new ApplicationContextUser();
-
+ApplicationContextUser dbUser = new ApplicationContextUser();
+ApplicationContextNote dbNote = new ApplicationContextNote();
 
 app.MapPost("/register", async context => {
     context.Response.ContentType = "application/json";
     var userCredentials = await context.Request.ReadFromJsonAsync<Models.UserCredentials>();
     
-    db.Database.EnsureCreated();
+    dbUser.Database.EnsureCreated();
     User user = new User(userCredentials!.Username, userCredentials.Password);
-    User isCreated = db.FindUserByName(userCredentials.Username);
+    User isCreated = dbUser.FindUserByName(userCredentials.Username);
     
     if (isCreated != null)
     {
@@ -31,8 +31,8 @@ app.MapPost("/register", async context => {
         return;
     }
     
-    db.Users.Add(user);
-    db.SaveChanges();
+    dbUser.Users.Add(user);
+    dbUser.SaveChanges();
     
     Console.WriteLine($"/register | Username: {userCredentials.Username} Pass: {userCredentials.Password}");
     
@@ -43,8 +43,8 @@ app.MapPost("/login", async context => {
     context.Response.ContentType = "application/json";
     var userCredentials = await context.Request.ReadFromJsonAsync<Models.UserCredentials>();
 
-    db.Database.EnsureCreated();
-    User isCreated = db.FindUserByNameAndPassword(userCredentials!.Username, userCredentials.Password);
+    dbUser.Database.EnsureCreated();
+    User isCreated = dbUser.FindUserByNameAndPassword(userCredentials!.Username, userCredentials.Password);
 
     if (isCreated == null)
     {
@@ -56,16 +56,45 @@ app.MapPost("/login", async context => {
     await context.Response.WriteAsJsonAsync(new { username = userCredentials!.Username, error = null as string});
 });
 
-app.MapGet("/notes", async context => {
+app.MapPost("/notes", async context => {
+    context.Response.ContentType = "application/json";
+    var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
+
+    dbNote.Database.EnsureCreated();
+    //Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
     
+    
+    
+    Console.WriteLine($"/notes");
+    await context.Response.WriteAsJsonAsync(new { notes = dbNote.FindNotesByUsername(noteCredentials!.Username)});
 });
 
 app.MapPost("/notes/add", async context => {
+    context.Response.ContentType = "application/json";
+    var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
 
+    dbNote.Database.EnsureCreated();
+    Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
+    
+    dbNote.Notes.Add(note);
+    dbNote.SaveChanges();
+    
+    Console.WriteLine($"/notes/add | Title: {noteCredentials!.Title} Description: {noteCredentials.Description}");
+    await context.Response.WriteAsJsonAsync(new { data = "2"});
 });
 
 app.MapPost("/notes/delete", async context => {
+    context.Response.ContentType = "application/json";
+    var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
+
+    dbNote.Database.EnsureCreated();
+    Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
+
+    dbNote.Notes.Remove(note);
+    dbNote.SaveChanges();
     
+    Console.WriteLine($"/notes/delete | Title: {noteCredentials!.Title} Description: {noteCredentials.Description}");
+    await context.Response.WriteAsJsonAsync(new { data = "3"});
 });
 
 app.MapPost("/notes/edit", async context => {

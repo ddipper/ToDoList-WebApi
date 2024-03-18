@@ -8,7 +8,7 @@ namespace SQLite
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=./db/users.sqlite");
+            optionsBuilder.UseSqlite("Data Source=./db/notes.sqlite");
         }
         
         public List<Note> FindNotesByUsername(string name)
@@ -19,7 +19,7 @@ namespace SQLite
 
         public Note FindNote(string name, string title, string description)
         {
-            return Notes.FirstOrDefault(u => u.Username == name && u.Title == title && u.Descripton == description);
+            return Notes.FirstOrDefault(u => u.Username == name && u.Title == title && u.Description == description);
         }
     }
 }

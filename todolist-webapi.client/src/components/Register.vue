@@ -1,9 +1,9 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon" v-if="!valid"></v-icon>
-    <h1 v-if="!valid">Register to ToDo List {{ userStore.username }} </h1>
-    <v-form @submit.prevent class="form" v-if="!valid || userStore.username == null" @submit="register()">
+    <v-icon :icon="'mdi-plus'" size="50px" color="#9e9eff" class="icon" v-if="userStore.username == null"></v-icon>
+    <h1 v-if="userStore.username == null">Register to ToDo List</h1>
+    <v-form @submit.prevent class="form" v-if="userStore.username == null" @submit="register()">
       <v-text-field
           v-model="username"
           label="Username"
@@ -26,7 +26,7 @@
       <v-btn class="mt-2" type="submit" block :loading="loading" :active="btnSubmit">Register</v-btn>
     </v-form>
     <div v-else class="form2">
-      <h1>You have been successfully registered.<br>Username: {{ username }}</h1>
+      <h1>You have been successfully registered.<br>Username: {{ userStore.username }}</h1>
       <router-link :to="{ name: 'Notes' }">Go to notes</router-link>
     </div>
   </div>
@@ -57,7 +57,6 @@ export default {
           if(this.username != null) { this.btnSubmit = true  }
         } 
       ],
-      valid: false,
       loading: false,
       btnSubmit: false,
     }
@@ -66,7 +65,7 @@ export default {
     async register() {
       if(this.username == null || this.password == null || this.password != this.password2)
       {
-        alert('Сheck the correctness of the entered data.')
+        alert('Check the correctness of the entered data.')
         return
       }
       this.load()
@@ -75,7 +74,6 @@ export default {
           { headers: { 'Content-Type': 'application/json' } }
       ).then(({ data }) => {
         if(data.error == null) {
-          this.valid = data.username;
           this.userStore.setUsername(data.username);
         }
         else if(data.error == 'taken') {

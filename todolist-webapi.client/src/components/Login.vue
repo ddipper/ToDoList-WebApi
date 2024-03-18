@@ -1,9 +1,9 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-icon v-if="!valid" :icon="'mdi-account'" size="50px" color="#9e9eff" class="icon"></v-icon>
-    <h1 v-if="!valid">Login to ToDo List</h1>
-    <v-form v-if="!valid" @submit.prevent class="form" @submit="login()">
+    <v-icon v-if="userStore.username == null" :icon="'mdi-account'" size="50px" color="#9e9eff" class="icon"></v-icon>
+    <h1 v-if="userStore.username == null">Login to ToDo List</h1>
+    <v-form v-if="userStore.username == null" @submit.prevent class="form" @submit="login()">
       <v-text-field
           v-model="username"
           label="Username"
@@ -20,7 +20,7 @@
       <v-btn class="mt-2" type="submit" block :loading="loading" :active="btnSubmit">Login</v-btn>
     </v-form>
     <div v-else class="form2">
-      <h1>You have been successfully logged.<br>Username: {{ username }}</h1>
+      <h1>You have been successfully logged.<br>Username: {{ userStore.username }}</h1>
       <router-link :to="{ name: 'Notes' }">Go to notes</router-link>
     </div>
   </div>
@@ -33,7 +33,6 @@ import { useUserStore } from "@/stores/UserStore.js";
 export default {
   data: () => ({
     userStore: useUserStore(),
-    valid: false,
     API_URL: 'http://localhost:5106',
     username: '',
     password: '',
@@ -60,7 +59,6 @@ export default {
           { headers: { 'Content-Type': 'application/json' } }
       ).then(({ data }) => {
         if(data.error == null) {
-          this.valid = data.username;
           this.userStore.setUsername(data.username);
         }
         else if (data.error == 'unregister'){

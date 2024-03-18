@@ -4,11 +4,11 @@
     <v-btn prepend-icon="mdi-plus" variant="tonal" class="btn-create" @click="dialogNew = true">
       New note
     </v-btn>
-    <div class="note">
-      <h2>Note name</h2>
-      <h3>Todo Tomorrow is a note created to organize and prioritize tasks that need to be accomplished the next day. This note serves as a reminder and a planner, helping users to stay focused and efficient. It can include various tasks ranging from personal errands to professional assignments. Users can add, update, or delete tasks as their schedule changes.</h3>
+    <div class="note" v-for="note in notesStore.notes">
+      <h2>{{ note.Title }}</h2>
+      <h3>{{ note.Description }}</h3>
       <div class="note-buttons">
-        <v-btn size="small" prepend-icon="mdi-pencil">Edit note</v-btn>
+        <v-btn size="small" prepend-icon="mdi-pencil" @click="console.log(note.Title)">Edit note</v-btn>
         <v-btn size="small" prepend-icon="mdi-minus">Delete note</v-btn>
       </div>
     </div>
@@ -18,12 +18,12 @@
           <v-card-text>
             <v-row dense>  
               <v-col>
-                <v-text-field label="Title" required></v-text-field>
+                <v-text-field label="Title" required v-model="noteTitle" :rules="rules"></v-text-field>
               </v-col>
             </v-row>
             <v-row dense>
               <v-col>
-                <v-textarea label="Description" required></v-textarea>
+                <v-textarea label="Description" required v-model="noteDescription" :rules="rules"></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -33,9 +33,9 @@
           <v-card-actions>
             <v-spacer></v-spacer>
   
-            <v-btn text="Close" variant="plain" @click="dialogNew = false"></v-btn>
+            <v-btn text="Close" variant="plain" @click="dialogNew = false" :loading="loading"></v-btn>
   
-            <v-btn color="primary" text="Save" variant="tonal" @click="dialogNew = false" ></v-btn>
+            <v-btn color="primary" text="Add note" variant="tonal" @click="newNote()" :loading="loading"></v-btn>
           
           </v-card-actions>
         </v-card>
@@ -44,11 +44,68 @@
   </div>
 </template>
   
+<script setup>
+  import axios from 'axios'
+  import { useUserStore } from "@/stores/UserStore.js";
+  import { useNotesStore } from "@/stores/NotesStore.js";
+  
+  axios.post(
+      `http://localhost:5106/notes`, { username: useUserStore().username, title: 'none', description: 'none' },
+      { headers: { 'Content-Type': 'application/json' } }
+  ).then(({ data }) => {
+    console.log(data.notes);
+    for(const note in data.notes ){
+      useNotesStore().addNote(note.title, note.descripton);
+    }
+  })
+</script>
+
 <script>
-  export default {
+import axios from 'axios'
+import { useUserStore } from "@/stores/UserStore.js";
+import { useNotesStore } from "@/stores/NotesStore.js";
+export default {
     data: () => ({
+      API_URL: 'http://localhost:5106',
+      notesStore: useNotesStore(),
+      userStore: useUserStore(),
       dialogNew: false,
+      noteTitle: '',
+      noteDescription: '',
+      rules: [
+        value => {
+          if (value) { return true }
+          return 'This is a required field.'
+        },
+      ],
+      loading: false,
     }),
+    methods: {
+      load () {
+        this.loading = true
+      },
+      unLoad() {
+        this.loading = false
+      },
+      async newNote() {
+        this.dialogNew = false;
+        if(this.noteTitle == '' || this.noteDescription == '') 
+        {
+          alert('Title or description fields are not filled in.')
+          return
+        }
+        this.load()
+        await axios.post(
+            `${this.API_URL}/notes/add`, { username: this.userStore.username, title: this.noteTitle, description: this.noteDescription },
+            { headers: { 'Content-Type': 'application/json' } }
+        ).then(({ data }) => {
+          this.unLoad();
+          this.notesStore.addNote(this.noteTitle, this.noteDescription);
+          this.noteTitle = '';
+          this.noteDescription = '';
+        })
+      }
+    }
   }
 </script>
 
@@ -64,7 +121,7 @@
   }
   
   .btn-create{
-    margin-top: 50px;
+    margin-top: 75px;
   }
   
   .note{
