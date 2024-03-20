@@ -4,11 +4,11 @@ namespace SQLite
 {
     public class ApplicationContextNote : DbContext
     {
-        public DbSet<SQLite.Note> Notes {get;set; } = null!;
+        public DbSet<SQLite.Note> Notes {get; set; } = null!;
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=./db/notes.sqlite");
+            optionsBuilder.UseSqlite("Data Source=./db/notes.db");
         }
         
         public List<Note> FindNotesByUsername(string name)

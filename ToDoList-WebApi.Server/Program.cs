@@ -1,6 +1,5 @@
-using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
+using Models;
 using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,12 +15,13 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
 
 ApplicationContextUser dbUser = new ApplicationContextUser();
 ApplicationContextNote dbNote = new ApplicationContextNote();
+dbUser.Database.EnsureCreated();
+dbNote.Database.EnsureCreated();
 
 app.MapPost("/register", async context => {
     context.Response.ContentType = "application/json";
     var userCredentials = await context.Request.ReadFromJsonAsync<Models.UserCredentials>();
     
-    dbUser.Database.EnsureCreated();
     User user = new User(userCredentials!.Username, userCredentials.Password);
     User isCreated = dbUser.FindUserByName(userCredentials.Username);
     
@@ -42,8 +42,7 @@ app.MapPost("/register", async context => {
 app.MapPost("/login", async context => {
     context.Response.ContentType = "application/json";
     var userCredentials = await context.Request.ReadFromJsonAsync<Models.UserCredentials>();
-
-    dbUser.Database.EnsureCreated();
+    
     User isCreated = dbUser.FindUserByNameAndPassword(userCredentials!.Username, userCredentials.Password);
 
     if (isCreated == null)
@@ -58,22 +57,19 @@ app.MapPost("/login", async context => {
 
 app.MapPost("/notes", async context => {
     context.Response.ContentType = "application/json";
+    context.Response.StatusCode = 200;
     var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
-
-    dbNote.Database.EnsureCreated();
-    //Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
     
+    dbNote.Database.CloseConnection();
     
-    
-    Console.WriteLine($"/notes");
-    await context.Response.WriteAsJsonAsync(new { notes = dbNote.FindNotesByUsername(noteCredentials!.Username)});
+    Console.WriteLine("/notes");
+    await context.Response.WriteAsJsonAsync(new { notes = dbNote.FindNotesByUsername(noteCredentials.Username)});
 });
 
 app.MapPost("/notes/add", async context => {
     context.Response.ContentType = "application/json";
     var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
-
-    dbNote.Database.EnsureCreated();
+    
     Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
     
     dbNote.Notes.Add(note);
@@ -86,9 +82,8 @@ app.MapPost("/notes/add", async context => {
 app.MapPost("/notes/delete", async context => {
     context.Response.ContentType = "application/json";
     var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
-
-    dbNote.Database.EnsureCreated();
-    Note note = new Note(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
+    
+    Note note = dbNote.FindNote(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
 
     dbNote.Notes.Remove(note);
     dbNote.SaveChanges();
@@ -98,7 +93,17 @@ app.MapPost("/notes/delete", async context => {
 });
 
 app.MapPost("/notes/edit", async context => {
+    context.Response.ContentType = "application/json";
+    var editNoteCredentials = await context.Request.ReadFromJsonAsync<Models.EditNoteCredentials>();
+    NoteCredentials noteCredentials = editNoteCredentials!;
     
+    Note note = dbNote.FindNote(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
+
+    dbNote.Notes.Remove(note);
+    dbNote.SaveChanges();
+    
+    Console.WriteLine($"/notes/edit | Title: {editNoteCredentials!.NewTitle} Description: {noteCredentials.Description}");
+    await context.Response.WriteAsJsonAsync(new { data = "3"});
 });
 
 app.Run();
