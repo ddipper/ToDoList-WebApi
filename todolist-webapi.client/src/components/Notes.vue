@@ -1,10 +1,11 @@
 ﻿<template>
   <router-view/>
   <div class="content">
-    <v-btn prepend-icon="mdi-plus" variant="tonal" class="btn-create" @click="dialogNew = true">
+    <v-btn v-if="userStore.username != null" prepend-icon="mdi-plus" variant="tonal" class="btn-create" @click="dialogNew = true">
       New note
     </v-btn>
-    <div class="note" v-for="note in notesStore.notes">
+    <h2 v-else>Register or logging please.</h2>
+    <div v-if="userStore.username != null" class="note" v-for="note in notesStore.notes">
       <h2>{{ note.Title }}</h2>
       <h3>{{ note.Description }}</h3>
       <div class="note-buttons">
@@ -68,7 +69,7 @@
 
             <v-btn text="Close" variant="plain" @click="dialogEdit = false" :loading="loading"></v-btn>
 
-            <v-btn color="primary" text="Edit note" variant="tonal" @click="newNote()" :loading="loading"></v-btn>
+            <v-btn color="primary" text="Edit note" variant="tonal" @click="editNote(currentNote.Title, currentNote.Description, editTitle, editDescription)" :loading="loading"></v-btn>
 
           </v-card-actions>
         </v-card>
@@ -85,9 +86,8 @@
   axios.post(
       `http://localhost:5106/notes`, { username: useUserStore().username, title: 'none', description: 'none' },
       { headers: { 'Content-Type': 'application/json' } }
-  ).then( (response) => {
-    const data = response.data;
-    if(data.notes != null || response.status != 200) {
+  ).then(({ data }) => {
+    if(data.notes != null) {
       for (const note of data.notes) {
         useNotesStore().addNote(note.title, note.description);
       }
@@ -110,6 +110,7 @@ export default {
       noteDescription: '',
       editTitle: '',
       editDescription: '',
+      currentNote: null,
       rules: [
         value => {
           if (value) { return true }
@@ -152,22 +153,24 @@ export default {
         })
       },
       async editNote(oldTitle, oldDescription, newTitle, newDescription) {
-        if(this.noteTitle == '' || this.noteDescription == '')
+        if(newTitle == '' || newDescription == '')
         {
           alert('Title or description fields are not filled in.')
           return
         }
+        else if(oldTitle == newTitle && oldDescription == newDescription) { this.dialogEdit = false; return; }
         this.load()
         await axios.post(
-            `${this.API_URL}/notes/edit`, { username: this.userStore.username, title: oldTitle, description: oldDescription, newTitle: newTitle, newDescription },
+            `${this.API_URL}/notes/edit`, { username: this.userStore.username, title: oldTitle, description: oldDescription, newTitle: newTitle, newDescription: newDescription },
             { headers: { 'Content-Type': 'application/json' } }
         ).then(({ data }) => {
-          this.unLoad();
+          this.unLoad();  
           this.notesStore.updateNote(oldTitle, oldDescription, newTitle, newDescription);
           this.dialogEdit = false;
         })
       },
       openEditDialog(note) {
+        this.currentNote = note;
         this.editTitle = note.Title;
         this.editDescription = note.Description;
         this.dialogEdit = true;

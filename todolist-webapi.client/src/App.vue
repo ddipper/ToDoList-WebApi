@@ -7,6 +7,9 @@ export default {
     }
   },
   methods: {
+    logOut(){
+      this.userStore.setUsername(null);
+    }
   }
 }
 </script>
@@ -19,6 +22,7 @@ export default {
       <router-link v-if="userStore.username == null" :to="{ name: 'Login' }">Login</router-link>
       <router-link v-if="userStore.username == null" :to="{ name: 'Register' }">Register</router-link>
       <h2 v-if="userStore.username != null">{{ userStore.username }}</h2>
+      <h3 v-if="userStore.username != null" @click="logOut()">Logout</h3>
     </div>
   </header>
   <router-view/>
@@ -54,7 +58,7 @@ export default {
   .header-links{
     display: flex;
     justify-content: space-around;
-
+    
     a{
       color: white;
       padding: 10px 15px;
@@ -64,6 +68,15 @@ export default {
       color: white;
       padding: 10px 15px;
       font-size: 15px;
+    }
+
+    h3{
+      text-decoration: underline;
+      font-size: 14px;
+      padding: 10px 15px;
+      font-weight: 400;
+      text-align: center;
+      align-items: center;
     }
   }
   

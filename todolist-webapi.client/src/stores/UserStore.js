@@ -6,8 +6,13 @@ export const useUserStore = defineStore("userStore", {
     },
     actions: {
         setUsername(name){
-            this.username = name;
-            localStorage.setItem('username', name);
+            if(name != null) {
+                this.username = name;
+                localStorage.setItem('username', name);
+                return;
+            }
+            this.username = null;
+            localStorage.removeItem('username');
         }
     }
 })

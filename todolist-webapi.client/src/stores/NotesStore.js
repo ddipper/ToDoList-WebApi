@@ -15,11 +15,11 @@ export const useNotesStore = defineStore("notesStore", {
             this.notes.push({ Title: title, Description: description });
         },
         updateNote(oldTitle, oldDescription, newTitle, newDescription) {
-            const note = this.findNote(oldTitle, oldDescription);
+            const note = this.notes.find(note => note.Title === oldTitle && note.Description === oldDescription);
             if (note) {
                 note.Title = newTitle;
                 note.Description = newDescription;
             }
-        }
+        }   
     },
 })

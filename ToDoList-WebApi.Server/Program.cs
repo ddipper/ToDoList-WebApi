@@ -57,7 +57,6 @@ app.MapPost("/login", async context => {
 
 app.MapPost("/notes", async context => {
     context.Response.ContentType = "application/json";
-    context.Response.StatusCode = 200;
     var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
     
     dbNote.Database.CloseConnection();
@@ -95,14 +94,15 @@ app.MapPost("/notes/delete", async context => {
 app.MapPost("/notes/edit", async context => {
     context.Response.ContentType = "application/json";
     var editNoteCredentials = await context.Request.ReadFromJsonAsync<Models.EditNoteCredentials>();
-    NoteCredentials noteCredentials = editNoteCredentials!;
     
-    Note note = dbNote.FindNote(noteCredentials!.Username, noteCredentials!.Title, noteCredentials!.Description);
-
-    dbNote.Notes.Remove(note);
+    Note note = dbNote.FindNote(editNoteCredentials!.Username, editNoteCredentials!.Title, editNoteCredentials!.Description);
+    note.Title = editNoteCredentials.NewTitle;
+    note.Description = editNoteCredentials.NewDescription;
+    
+    dbNote.Notes.Update(note);
     dbNote.SaveChanges();
     
-    Console.WriteLine($"/notes/edit | Title: {editNoteCredentials!.NewTitle} Description: {noteCredentials.Description}");
+    Console.WriteLine($"/notes/edit | Title: {editNoteCredentials!.NewTitle} Description: {editNoteCredentials.NewDescription}");
     await context.Response.WriteAsJsonAsync(new { data = "3"});
 });
 
