@@ -59,8 +59,6 @@ app.MapPost("/notes", async context => {
     context.Response.ContentType = "application/json";
     var noteCredentials = await context.Request.ReadFromJsonAsync<Models.NoteCredentials>();
     
-    dbNote.Database.CloseConnection();
-    
     Console.WriteLine("/notes");
     await context.Response.WriteAsJsonAsync(new { notes = dbNote.FindNotesByUsername(noteCredentials.Username)});
 });
