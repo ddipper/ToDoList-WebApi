@@ -1,37 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
- 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SQLite
 {
-    public class ApplicationContextUser : DbContext
+    public class ApplicationContext : DbContext
     {
-        public DbSet<User> Users {get;set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Note> Notes { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=./db/users.sqlite");
+            optionsBuilder.UseSqlite("Data Source=./db/db.sqlite");
+            //optionsBuilder.UseSqlite("Data Source=./db/notes.db");
         }
+
         public User FindUserByName(string name)
         {
             return Users.FirstOrDefault(u => u.Name == name);
         }
+
         public User FindUserByNameAndPassword(string name, string password)
         {
             return Users.FirstOrDefault(u => u.Name == name && u.Password == password);
         }
-    }
-    
-    public class ApplicationContextNote : DbContext
-    {
-        public DbSet<Note> Notes {get; set; } = null!;
-        
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=./db/notes.db");
-        }
-        
+
         public List<Note> FindNotesByUsername(string name)
         {
-            List<Note> notes = Notes.Where(u => u.Username == name).ToList();
-            return notes;
+            return Notes.Where(u => u.Username == name).ToList();
         }
 
         public Note FindNote(string name, string title, string description)
