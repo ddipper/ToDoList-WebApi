@@ -2,9 +2,26 @@
  
 namespace SQLite
 {
+    public class ApplicationContextUser : DbContext
+    {
+        public DbSet<User> Users {get;set; } = null!;
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=./db/users.sqlite");
+        }
+        public User FindUserByName(string name)
+        {
+            return Users.FirstOrDefault(u => u.Name == name);
+        }
+        public User FindUserByNameAndPassword(string name, string password)
+        {
+            return Users.FirstOrDefault(u => u.Name == name && u.Password == password);
+        }
+    }
+    
     public class ApplicationContextNote : DbContext
     {
-        public DbSet<SQLite.Note> Notes {get; set; } = null!;
+        public DbSet<Note> Notes {get; set; } = null!;
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
