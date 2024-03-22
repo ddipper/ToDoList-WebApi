@@ -13,10 +13,6 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-/*ApplicationContextUser dbUser = new ApplicationContextUser();
-ApplicationContextNote dbNote = new ApplicationContextNote();
-dbUser.Database.EnsureCreated();
-dbNote.Database.EnsureCreated();*/
 ApplicationContext db = new ApplicationContext();
 db.Database.EnsureCreated();
 

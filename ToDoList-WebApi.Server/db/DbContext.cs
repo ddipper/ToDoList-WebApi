@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
+using DotNetEnv;
 
 namespace SQLite
 {
@@ -11,8 +10,9 @@ namespace SQLite
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=./db/db.sqlite");
-            //optionsBuilder.UseSqlite("Data Source=./db/notes.db");
+            Env.Load();
+            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            optionsBuilder.UseSqlite(connectionString);
         }
 
         public User FindUserByName(string name)
